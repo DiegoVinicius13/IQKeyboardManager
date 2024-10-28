@@ -137,11 +137,11 @@ public extension IQKeyboardManagerWrapper where Base: UIView {
             parentContainerViewController = matchController
         }
 
-        if let controller: UIViewController = parentContainerViewController?.iq_parentContainerViewController() {
-            return controller
-        } else {
+//        if let controller: UIViewController = parentContainerViewController?.iq_parentContainerViewController() {
+//            return controller
+//        } else {
             return parentContainerViewController
-        }
+//        }
     }
 
     // MARK: Superviews/Subviews/Siblings
