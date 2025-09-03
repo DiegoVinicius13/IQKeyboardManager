@@ -50,16 +50,18 @@ public extension IQKeyboardManagerWrapper where Base: UIView {
         if let unwrappedToolbar: IQToolbar = toolbar {
             return unwrappedToolbar
         } else {
-
             let width: CGFloat = base?.window?.windowScene?.screen.bounds.width ?? 0
-
-            let frame = CGRect(origin: .zero, size: .init(width: width, height: 44))
+            let height: CGFloat
+            if #available(iOS 26.0, *) {
+                height = 58
+            } else {
+                height = 44
+            }
+            let frame = CGRect(origin: .zero, size: .init(width: width, height: height))
             let newToolbar = IQToolbar(frame: frame)
-
             if let base = base {
                 objc_setAssociatedObject(base, &AssociatedKeys.toolbar, newToolbar, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
-
             return newToolbar
         }
     }
@@ -157,8 +159,7 @@ public extension IQKeyboardManagerWrapper where Base: UIView {
             }
 
             if previousConfiguration != nil, nextConfiguration != nil {
-
-                items.append(toolbar.fixedSpaceBarButton)
+                items.append(IQBarButtonItem.fixedSpaceBarButton)
             }
 
             if let nextConfiguration: IQBarButtonItemConfiguration = nextConfiguration {
@@ -174,9 +175,14 @@ public extension IQKeyboardManagerWrapper where Base: UIView {
 
             // Title bar button item
             do {
-                // Flexible space
-                items.append(IQBarButtonItem.flexibleBarButtonItem)
-
+                if #available(iOS 26.0, *) {
+                    if !items.isEmpty {
+                        items.append(IQBarButtonItem.flexibleBarButtonItem)
+                    }
+                } else {
+                    items.append(IQBarButtonItem.flexibleBarButtonItem)
+                }
+                                
                 // Title button
                 toolbar.titleBarButton.title = title
                 toolbar.titleBarButton.accessibilityLabel = titleAccessibilityLabel
